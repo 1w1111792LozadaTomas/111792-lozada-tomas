@@ -1,0 +1,1239 @@
+-- Database: MiLegajo
+
+-- DROP DATABASE IF EXISTS "MiLegajo";
+
+CREATE DATABASE "MiLegajo"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_United States.1252'
+    LC_CTYPE = 'English_United States.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+
+-- Table: public.categorias
+
+-- DROP TABLE IF EXISTS public.categorias;
+
+CREATE TABLE IF NOT EXISTS public.categorias
+(
+    categoria_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    categoria_id_padre bigint,
+    nombre character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    descripcion character varying(500) COLLATE pg_catalog."default",
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    sueldo_basico numeric(10,2),
+    id_jurisdiccion bigint,
+    id_tipo_liquidacion bigint,
+    categoria_superior bigint,
+    CONSTRAINT categorias_pkey PRIMARY KEY (categoria_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.categorias
+    OWNER to postgres;
+
+
+-- Table: public.direcciones
+
+-- DROP TABLE IF EXISTS public.direcciones;
+
+CREATE TABLE IF NOT EXISTS public.direcciones
+(
+    id_direccion bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    direccion character varying(500) COLLATE pg_catalog."default",
+    id_persona bigint,
+    CONSTRAINT direcciones_pkey PRIMARY KEY (id_direccion),
+    CONSTRAINT fk_direcciones_personas FOREIGN KEY (id_persona)
+        REFERENCES public.t_personas (id_persona) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.direcciones
+    OWNER to postgres;
+
+
+-- Table: public.estados
+
+-- DROP TABLE IF EXISTS public.estados;
+
+CREATE TABLE IF NOT EXISTS public.estados
+(
+    estado_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    nombre character varying(200) COLLATE pg_catalog."default" NOT NULL,
+    descripcion character varying(500) COLLATE pg_catalog."default",
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_jurisdiccion bigint,
+    CONSTRAINT estados_pkey PRIMARY KEY (estado_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.estados
+    OWNER to postgres;
+
+
+-- Table: public.legajos
+
+-- DROP TABLE IF EXISTS public.legajos;
+
+CREATE TABLE IF NOT EXISTS public.legajos
+(
+    legajo_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    numero character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    id_persona character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    fecha_ingreso timestamp(0) without time zone NOT NULL,
+    fecha_egreso timestamp(0) without time zone,
+    categoria_id bigint NOT NULL,
+    funcion character varying(100) COLLATE pg_catalog."default",
+    detalles character varying(500) COLLATE pg_catalog."default",
+    contrato character varying(500) COLLATE pg_catalog."default",
+    motivo_salida_id bigint,
+    detalles_salida character varying(500) COLLATE pg_catalog."default",
+    tipo_contrato_id bigint,
+    estado smallint NOT NULL,
+    sueldo numeric(10,2) NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_area bigint,
+    nro_jubilacion numeric(20,0),
+    id_funcion bigint,
+    codigo_situacion bigint,
+    codigo_condicion bigint,
+    codigo_actividad bigint,
+    codigo_modalidad_contratacion bigint,
+    codigo_siniestrado bigint,
+    codigo_obra_social bigint,
+    codigo_delegacion bigint,
+    codigo_departamento bigint,
+    fecha_antiguedad timestamp(0) without time zone,
+    id_persona_old character varying(10) COLLATE pg_catalog."default",
+    id_lugar_presta_servicio bigint,
+    id_cargo bigint,
+    id_funcion_legajo bigint,
+    fecha_sincontrato timestamp(0) without time zone,
+    fecha_iniciocontrato timestamp(0) without time zone,
+    legajo_id_subrogado bigint DEFAULT 0,
+    tipo_antiguedad bigint DEFAULT 1,
+    fecha_pasividad timestamp(0) without time zone,
+    id_reparticion bigint,
+    id_seccion bigint,
+    grupo_sanguineo character varying(20) COLLATE pg_catalog."default",
+    horas_mensuales numeric(10,2) DEFAULT 0,
+    plantilla text COLLATE pg_catalog."default",
+    id_plantilla bigint,
+    CONSTRAINT legajos_pkey PRIMARY KEY (legajo_id),
+    CONSTRAINT fk_legajos_areas FOREIGN KEY (id_area)
+        REFERENCES public.t_areas (id_area) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_legajos_motivos_salidas FOREIGN KEY (motivo_salida_id)
+        REFERENCES public.motivos_salidas (motivo_salida_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_legajos_tipos_contratos FOREIGN KEY (tipo_contrato_id)
+        REFERENCES public.tipos_contratos (tipo_contrato_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.legajos
+    OWNER to postgres;
+
+
+-- Table: public.licencias
+
+-- DROP TABLE IF EXISTS public.licencias;
+
+CREATE TABLE IF NOT EXISTS public.licencias
+(
+    licencia_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    legajo_id bigint NOT NULL,
+    tipo_licencia_id bigint NOT NULL,
+    inicio timestamp with time zone NOT NULL,
+    fin timestamp with time zone NOT NULL,
+    detalles character varying(500) COLLATE pg_catalog."default",
+    estado smallint NOT NULL,
+    archivo bytea,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    pertenece_anio bigint,
+    cantidad_dias bigint,
+    nombre_archivo character varying(100) COLLATE pg_catalog."default",
+    periodo_ids bigint,
+    CONSTRAINT licencias_pkey PRIMARY KEY (licencia_id),
+    CONSTRAINT fk_licencias_legajos FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_licencias_tipos_licencias FOREIGN KEY (tipo_licencia_id)
+        REFERENCES public.tipos_licencias (tipo_licencia_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.licencias
+    OWNER to postgres;
+
+
+-- Table: public.motivos_salidas
+
+-- DROP TABLE IF EXISTS public.motivos_salidas;
+
+CREATE TABLE IF NOT EXISTS public.motivos_salidas
+(
+    motivo_salida_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    nombre character varying(200) COLLATE pg_catalog."default" NOT NULL,
+    descripcion character varying(500) COLLATE pg_catalog."default",
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_jurisdiccion bigint,
+    CONSTRAINT motivos_salidas_pkey PRIMARY KEY (motivo_salida_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.motivos_salidas
+    OWNER to postgres;
+
+
+-- Table: public.periodos
+
+-- DROP TABLE IF EXISTS public.periodos;
+
+CREATE TABLE IF NOT EXISTS public.periodos
+(
+    periodo_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    anio smallint NOT NULL,
+    mes smallint NOT NULL,
+    fecha_pago timestamp(0) without time zone,
+    total_sueldos numeric(10,2),
+    total_otros_egresos numeric(10,2),
+    total_ingresos numeric(10,2),
+    activo smallint NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    fecha_liquidacion timestamp(0) without time zone,
+    id_jurisdiccion bigint,
+    cerrado character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    id_periodo_orden bigint,
+    CONSTRAINT periodos_pkey PRIMARY KEY (periodo_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.periodos
+    OWNER to postgres;
+
+
+-- Table: public.recibos
+
+-- DROP TABLE IF EXISTS public.recibos;
+
+CREATE TABLE IF NOT EXISTS public.recibos
+(
+    recibo_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    legajo_id bigint NOT NULL,
+    fecha timestamp(0) without time zone NOT NULL,
+    periodo_id bigint NOT NULL,
+    estado smallint NOT NULL,
+    detalles character varying(500) COLLATE pg_catalog."default",
+    sueldo numeric(10,2),
+    categoria_texto character varying(200) COLLATE pg_catalog."default",
+    funcion_texto character varying(200) COLLATE pg_catalog."default",
+    banco_texto character varying(200) COLLATE pg_catalog."default",
+    cuenta_texto character varying(100) COLLATE pg_catalog."default",
+    empleado_texto character varying(200) COLLATE pg_catalog."default",
+    legajo_texto character varying(100) COLLATE pg_catalog."default",
+    cuil_texto character varying(100) COLLATE pg_catalog."default",
+    dias_trabajados bigint NOT NULL,
+    tipo smallint NOT NULL,
+    id_tipo_liquidacion bigint,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    publicar character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    fecha_pago timestamp(0) without time zone,
+    total_ingresos numeric(10,2),
+    total_subsidios numeric(10,2),
+    total_deducciones numeric(10,2),
+    neto numeric(10,2),
+    simulacion character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    usr_publicar character varying(20) COLLATE pg_catalog."default",
+    fec_publicar timestamp(0) without time zone,
+    usr_finalizar character varying(20) COLLATE pg_catalog."default",
+    fec_finalizar timestamp(0) without time zone,
+    conformidad character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    fecha_conformidad timestamp(0) without time zone,
+    area_texto character varying(100) COLLATE pg_catalog."default",
+    archivo bytea,
+    CONSTRAINT recibos_pkey PRIMARY KEY (recibo_id),
+    CONSTRAINT fk_recibos_legajos FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_recibos_periodos FOREIGN KEY (periodo_id)
+        REFERENCES public.periodos (periodo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_tipos_liquidacion FOREIGN KEY (id_tipo_liquidacion)
+        REFERENCES public.t_tipos_liquidacion (id_tipo_liquidacion) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.recibos
+    OWNER to postgres;
+
+
+-- Table: public.t_areas
+
+-- DROP TABLE IF EXISTS public.t_areas;
+
+CREATE TABLE IF NOT EXISTS public.t_areas
+(
+    id_area bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    id_area_rel bigint,
+    codigo character varying(15) COLLATE pg_catalog."default",
+    descripcion character varying(200) COLLATE pg_catalog."default",
+    version bigint,
+    vigente character varying(1) COLLATE pg_catalog."default" DEFAULT 'S'::character varying,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_jurisdiccion bigint,
+    CONSTRAINT t_areas_pkey PRIMARY KEY (id_area)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_areas
+    OWNER to postgres;
+
+
+-- Table: public.t_automotores
+
+-- DROP TABLE IF EXISTS public.t_automotores;
+
+CREATE TABLE IF NOT EXISTS public.t_automotores
+(
+    id_automotor character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    id_categoria_automotor bigint NOT NULL,
+    cip character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    ano_valuacion smallint NOT NULL,
+    modelo_automotor smallint NOT NULL,
+    nro_motor character varying(24) COLLATE pg_catalog."default" NOT NULL,
+    nro_chasis character varying(50) COLLATE pg_catalog."default",
+    certificado_fabricacion character varying(30) COLLATE pg_catalog."default",
+    nro_aduana character varying(20) COLLATE pg_catalog."default",
+    peso_cilindrada bigint,
+    patente character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    id_tipo_alta bigint,
+    valor_factura numeric(19,4) DEFAULT 0,
+    marca character varying(500) COLLATE pg_catalog."default",
+    importado character varying(1) COLLATE pg_catalog."default" NOT NULL DEFAULT 1,
+    cumplidor character varying(1) COLLATE pg_catalog."default" DEFAULT 1,
+    fecha_alta timestamp(0) without time zone NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    usr_act character varying(20) COLLATE pg_catalog."default",
+    fec_act timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    id_jurisdiccion bigint NOT NULL,
+    id_tipo_baja bigint,
+    id_bien_aut_pgm character varying(10) COLLATE pg_catalog."default",
+    CONSTRAINT fk_autom_tipoalta FOREIGN KEY (id_tipo_alta)
+        REFERENCES public.t_tipos_altabaja (id_tipo_altabaja) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_autom_tipobaja FOREIGN KEY (id_tipo_baja)
+        REFERENCES public.t_tipos_altabaja (id_tipo_altabaja) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_automotores_caterogia FOREIGN KEY (id_categoria_automotor)
+        REFERENCES public.t_automotores_categorias (id_categoria_automotor) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_automotores
+    OWNER to postgres;
+
+
+-- Table: public.t_automotores_categorias
+
+-- DROP TABLE IF EXISTS public.t_automotores_categorias;
+
+CREATE TABLE IF NOT EXISTS public.t_automotores_categorias
+(
+    id_categoria_automotor bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    tipo_categoria_automotor character varying(4) COLLATE pg_catalog."default" NOT NULL,
+    concepto character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    id_categoria_aut_rel bigint,
+    alicuota numeric(19,5),
+    monto_minimo numeric(19,5),
+    modelo_minimo smallint,
+    anio_valuacion smallint,
+    user_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fecha_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_mod character varying(20) COLLATE pg_catalog."default",
+    fecha_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_jurisdiccion bigint,
+    CONSTRAINT t_automotores_categorias_pkey PRIMARY KEY (id_categoria_automotor),
+    CONSTRAINT fk_autcateg_rel FOREIGN KEY (id_categoria_automotor)
+        REFERENCES public.t_automotores_categorias (id_categoria_automotor) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_automotores_categorias
+    OWNER to postgres;
+
+
+-- Table: public.t_bandeja_mensajes
+
+-- DROP TABLE IF EXISTS public.t_bandeja_mensajes;
+
+CREATE TABLE IF NOT EXISTS public.t_bandeja_mensajes
+(
+    id_bandeja_mensaje bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    legajo_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    fecha timestamp(0) without time zone NOT NULL,
+    asunto character varying(250) COLLATE pg_catalog."default" NOT NULL,
+    mensaje text COLLATE pg_catalog."default" NOT NULL,
+    leido character varying(1) COLLATE pg_catalog."default" NOT NULL DEFAULT 'N'::character varying,
+    importante character varying(1) COLLATE pg_catalog."default" NOT NULL DEFAULT 'N'::character varying,
+    anulado character varying(1) COLLATE pg_catalog."default" NOT NULL DEFAULT 'N'::character varying,
+    id_jurisdiccion double precision,
+    id_respuesta double precision,
+    nombre_archivo character varying(100) COLLATE pg_catalog."default",
+    archivo bytea,
+    id_legajo_destinatario bigint,
+    CONSTRAINT t_bandeja_mensajes_pkey PRIMARY KEY (id_bandeja_mensaje)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_bandeja_mensajes
+    OWNER to postgres;
+
+
+-- Table: public.t_funciones
+
+-- DROP TABLE IF EXISTS public.t_funciones;
+
+CREATE TABLE IF NOT EXISTS public.t_funciones
+(
+    id_funcion bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    nombre character varying(30) COLLATE pg_catalog."default",
+    descripcion character varying(200) COLLATE pg_catalog."default",
+    activo character varying(1) COLLATE pg_catalog."default" DEFAULT 'S'::character varying,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_jurisdiccion bigint,
+    CONSTRAINT t_funciones_pkey PRIMARY KEY (id_funcion)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_funciones
+    OWNER to postgres;
+
+
+-- Table: public.t_grupo_familiar
+
+-- DROP TABLE IF EXISTS public.t_grupo_familiar;
+
+CREATE TABLE IF NOT EXISTS public.t_grupo_familiar
+(
+    id_grupo_fam bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    legajo_id bigint NOT NULL,
+    id_parentesco bigint,
+    discapacitado character varying(1) COLLATE pg_catalog."default",
+    escolaridad bigint,
+    fecha_baja_esc timestamp(0) without time zone,
+    adicional_ob_social character varying(1) COLLATE pg_catalog."default",
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    a_cargo character varying(1) COLLATE pg_catalog."default",
+    fecha_nac timestamp with time zone,
+    ingreso_bruto bigint,
+    id_tipo_identificacion bigint,
+    nro_documento character varying(50) COLLATE pg_catalog."default",
+    nombre character varying(50) COLLATE pg_catalog."default",
+    apellido character varying(50) COLLATE pg_catalog."default",
+    fondo_enf_catastroficas character varying(1) COLLATE pg_catalog."default",
+    fallecido character varying(1) COLLATE pg_catalog."default" DEFAULT '0'::character varying,
+    archivo_discapacidad bytea,
+    archivo_escolaridad bytea,
+    archivo_partida bytea,
+    nombre_archivo_partida character varying(100) COLLATE pg_catalog."default",
+    nombre_archivo_discapacidad character varying(100) COLLATE pg_catalog."default",
+    nombre_archivo_escolaridad character varying(100) COLLATE pg_catalog."default",
+    CONSTRAINT t_grupo_familiar_pkey PRIMARY KEY (id_grupo_fam),
+    CONSTRAINT fk_legajo_id_gf FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_grupo_familiar
+    OWNER to postgres;
+
+
+-- Table: public.t_inmuebles
+
+-- DROP TABLE IF EXISTS public.t_inmuebles;
+
+CREATE TABLE IF NOT EXISTS public.t_inmuebles
+(
+    id_inmueble bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    nro_renta character varying(19) COLLATE pg_catalog."default",
+    nomenclatura character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    nombre_calle character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    numero_calle character varying(5) COLLATE pg_catalog."default",
+    torre character varying(30) COLLATE pg_catalog."default",
+    piso character varying(4) COLLATE pg_catalog."default",
+    nro_depto character varying(4) COLLATE pg_catalog."default",
+    id_localidad_barrio bigint NOT NULL,
+    esquina_medial character varying(2) COLLATE pg_catalog."default" NOT NULL DEFAULT 4,
+    superficie_terreno numeric(19,4) DEFAULT 0.00,
+    coeficiente_frente_fondo numeric(19,4) DEFAULT 0.00,
+    porcentaje_copropiedad numeric(19,4) DEFAULT 0.00,
+    designacion_oficial character varying(25) COLLATE pg_catalog."default",
+    base_imponible numeric(19,4) DEFAULT 0.00,
+    tasacion_terreno numeric(19,4) DEFAULT 0.00,
+    metros_frente numeric(19,4) DEFAULT 0.00,
+    frente_contribucion numeric(19,4) DEFAULT 0.00,
+    coef_irregularidad numeric(19,4) DEFAULT 0.00,
+    valor_terreno numeric(19,4) DEFAULT 0.00,
+    valor_edificado numeric(19,4) DEFAULT 0.00,
+    ejido character varying(4) COLLATE pg_catalog."default" NOT NULL DEFAULT 1,
+    nro_escritura character varying(30) COLLATE pg_catalog."default",
+    fec_escritura timestamp(0) without time zone,
+    registro character varying(30) COLLATE pg_catalog."default",
+    codigo_postal character varying(14) COLLATE pg_catalog."default" NOT NULL DEFAULT 5151,
+    metros_fondo numeric(19,4) DEFAULT 0.00,
+    unidades_locativas bigint,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    id_catastro character varying(10) COLLATE pg_catalog."default",
+    nro_cuenta character varying(10) COLLATE pg_catalog."default",
+    ph smallint NOT NULL DEFAULT 0,
+    id_tipo_inmueble bigint NOT NULL,
+    id_zona bigint NOT NULL,
+    id_tiposervicio bigint NOT NULL,
+    monto_cuota_historico numeric(19,4),
+    cumplidor character varying(1) COLLATE pg_catalog."default" NOT NULL DEFAULT 0,
+    latitud character varying(20) COLLATE pg_catalog."default",
+    longitud character varying(20) COLLATE pg_catalog."default",
+    id_jurisdiccion bigint,
+    id_tipo_alta bigint DEFAULT 6,
+    id_tipo_baja bigint DEFAULT 6,
+    fecha_alta timestamp(0) without time zone,
+    cant_ph bigint,
+    id_bien_inm_pgm character varying(10) COLLATE pg_catalog."default",
+    unidades_locativas_com bigint NOT NULL DEFAULT 0,
+    unidades_locativas_hab bigint NOT NULL DEFAULT 0,
+    catastro character varying(25) COLLATE pg_catalog."default",
+    nro_inmobiliario character varying(15) COLLATE pg_catalog."default",
+    tomo character varying(10) COLLATE pg_catalog."default",
+    folio character varying(5) COLLATE pg_catalog."default",
+    dominio_real character varying(20) COLLATE pg_catalog."default",
+    plan_mensura character varying(20) COLLATE pg_catalog."default",
+    posesion character varying(100) COLLATE pg_catalog."default",
+    CONSTRAINT t_inmuebles_pkey PRIMARY KEY (id_inmueble),
+    CONSTRAINT fk_inmuebles_alta FOREIGN KEY (id_tipo_alta)
+        REFERENCES public.t_tipos_altabaja (id_tipo_altabaja) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_inmuebles_baja FOREIGN KEY (id_tipo_baja)
+        REFERENCES public.t_tipos_altabaja (id_tipo_altabaja) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_inmuebles_jurisdiccion FOREIGN KEY (id_jurisdiccion)
+        REFERENCES public.t_organismos (id_organismo) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_inmuebles
+    OWNER to postgres;
+
+
+-- Table: public.t_inmuebles_tipos
+
+-- DROP TABLE IF EXISTS public.t_inmuebles_tipos;
+
+CREATE TABLE IF NOT EXISTS public.t_inmuebles_tipos
+(
+    id_tipo_inmueble bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    descripcion character varying(60) COLLATE pg_catalog."default" NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    CONSTRAINT t_inmuebles_tipos_pkey PRIMARY KEY (id_tipo_inmueble)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_inmuebles_tipos
+    OWNER to postgres;
+
+
+-- Table: public.t_mensajes_legajos
+
+-- DROP TABLE IF EXISTS public.t_mensajes_legajos;
+
+CREATE TABLE IF NOT EXISTS public.t_mensajes_legajos
+(
+    id_mensaje_legajo bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    id_bandeja_mensaje bigint,
+    legajo_id bigint,
+    leido character varying(1) COLLATE pg_catalog."default",
+    anulado character varying(1) COLLATE pg_catalog."default",
+    favorito boolean,
+    CONSTRAINT id_mensaje_legajo_pkey PRIMARY KEY (id_mensaje_legajo),
+    CONSTRAINT fk_legajos FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_t_bandeja_mensajes FOREIGN KEY (id_bandeja_mensaje)
+        REFERENCES public.t_bandeja_mensajes (id_bandeja_mensaje) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_mensajes_legajos
+    OWNER to postgres;
+
+
+-- Table: public.t_notificaciones
+
+-- DROP TABLE IF EXISTS public.t_notificaciones;
+
+CREATE TABLE IF NOT EXISTS public.t_notificaciones
+(
+    id_noti bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    legajo_id bigint,
+    plantilla character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+    leido boolean,
+    id_tipo_noti bigint NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    CONSTRAINT t_notificaciones_pkey PRIMARY KEY (id_noti),
+    CONSTRAINT fk_legajos_notificaciones FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_tipos_notificaciones_notificaciones FOREIGN KEY (id_tipo_noti)
+        REFERENCES public.t_tipos_notificaciones (id_tipo_noti) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_notificaciones
+    OWNER to postgres;
+
+
+
+-- Table: public.t_organismos
+
+-- DROP TABLE IF EXISTS public.t_organismos;
+
+CREATE TABLE IF NOT EXISTS public.t_organismos
+(
+    id_organismo bigint NOT NULL,
+    n_organismo character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    nomenclatura_catastral character varying(6) COLLATE pg_catalog."default",
+    usr_ing character varying(20) COLLATE pg_catalog."default",
+    fec_ing timestamp(0) without time zone,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    codigo_ente bigint,
+    numero_jurisdiccion bigint,
+    direccion character varying(100) COLLATE pg_catalog."default",
+    logo_chico bytea,
+    logo_grande bytea,
+    nombre_completo character varying(100) COLLATE pg_catalog."default",
+    cuit character varying(11) COLLATE pg_catalog."default",
+    logo text COLLATE pg_catalog."default",
+    pagos360_key character varying(200) COLLATE pg_catalog."default",
+    id_localidad bigint,
+    CONSTRAINT t_organismos_pkey PRIMARY KEY (id_organismo)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_organismos
+    OWNER to postgres;
+
+
+
+-- Table: public.t_organismos
+
+-- DROP TABLE IF EXISTS public.t_organismos;
+
+CREATE TABLE IF NOT EXISTS public.t_organismos
+(
+    id_organismo bigint NOT NULL,
+    n_organismo character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    nomenclatura_catastral character varying(6) COLLATE pg_catalog."default",
+    usr_ing character varying(20) COLLATE pg_catalog."default",
+    fec_ing timestamp(0) without time zone,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    codigo_ente bigint,
+    numero_jurisdiccion bigint,
+    direccion character varying(100) COLLATE pg_catalog."default",
+    logo_chico bytea,
+    logo_grande bytea,
+    nombre_completo character varying(100) COLLATE pg_catalog."default",
+    cuit character varying(11) COLLATE pg_catalog."default",
+    logo text COLLATE pg_catalog."default",
+    pagos360_key character varying(200) COLLATE pg_catalog."default",
+    id_localidad bigint,
+    CONSTRAINT t_organismos_pkey PRIMARY KEY (id_organismo)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_organismos
+    OWNER to postgres;
+
+
+
+-- Table: public.t_parametrizar_licencias
+
+-- DROP TABLE IF EXISTS public.t_parametrizar_licencias;
+
+CREATE TABLE IF NOT EXISTS public.t_parametrizar_licencias
+(
+    parametrizar_licencia_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    anio integer NOT NULL,
+    licencia_id bigint NOT NULL,
+    cantidad integer NOT NULL,
+    legajo_id bigint NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    CONSTRAINT t_parametrizar_licencias_pkey PRIMARY KEY (parametrizar_licencia_id),
+    CONSTRAINT fk_parame_licencias_legajos FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_parame_licencias_licencia FOREIGN KEY (licencia_id)
+        REFERENCES public.tipos_licencias (tipo_licencia_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_parametrizar_licencias
+    OWNER to postgres;
+
+
+
+-- Table: public.t_parametrizar_licencias
+
+-- DROP TABLE IF EXISTS public.t_parametrizar_licencias;
+
+CREATE TABLE IF NOT EXISTS public.t_parametrizar_licencias
+(
+    parametrizar_licencia_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    anio integer NOT NULL,
+    licencia_id bigint NOT NULL,
+    cantidad integer NOT NULL,
+    legajo_id bigint NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    CONSTRAINT t_parametrizar_licencias_pkey PRIMARY KEY (parametrizar_licencia_id),
+    CONSTRAINT fk_parame_licencias_legajos FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_parame_licencias_licencia FOREIGN KEY (licencia_id)
+        REFERENCES public.tipos_licencias (tipo_licencia_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_parametrizar_licencias
+    OWNER to postgres;
+
+
+
+-- Table: public.t_parametrizar_licencias
+
+-- DROP TABLE IF EXISTS public.t_parametrizar_licencias;
+
+CREATE TABLE IF NOT EXISTS public.t_parametrizar_licencias
+(
+    parametrizar_licencia_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    anio integer NOT NULL,
+    licencia_id bigint NOT NULL,
+    cantidad integer NOT NULL,
+    legajo_id bigint NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    CONSTRAINT t_parametrizar_licencias_pkey PRIMARY KEY (parametrizar_licencia_id),
+    CONSTRAINT fk_parame_licencias_legajos FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_parame_licencias_licencia FOREIGN KEY (licencia_id)
+        REFERENCES public.tipos_licencias (tipo_licencia_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_parametrizar_licencias
+    OWNER to postgres;
+
+
+
+-- Table: public.t_tipos_identificacion
+
+-- DROP TABLE IF EXISTS public.t_tipos_identificacion;
+
+CREATE TABLE IF NOT EXISTS public.t_tipos_identificacion
+(
+    id_tipo_identificacion smallint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 32767 CACHE 1 ),
+    n_tipo_identificacion character varying(100) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    nro_identificacion smallint,
+    userid_ing character varying(100) COLLATE pg_catalog."default" DEFAULT CURRENT_USER,
+    fecha_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    userid_act character varying(100) COLLATE pg_catalog."default" DEFAULT CURRENT_USER,
+    fecha_act timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    tipo_persona character varying(10) COLLATE pg_catalog."default",
+    CONSTRAINT pk_tipos_identificacion PRIMARY KEY (id_tipo_identificacion)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_tipos_identificacion
+    OWNER to postgres;
+-- Index: idx_tipo_ide
+
+-- DROP INDEX IF EXISTS public.idx_tipo_ide;
+
+CREATE INDEX IF NOT EXISTS idx_tipo_ide
+    ON public.t_tipos_identificacion USING btree
+    (id_tipo_identificacion ASC NULLS LAST, n_tipo_identificacion COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+
+-- Table: public.t_tipos_liquidacion
+
+-- DROP TABLE IF EXISTS public.t_tipos_liquidacion;
+
+CREATE TABLE IF NOT EXISTS public.t_tipos_liquidacion
+(
+    id_tipo_liquidacion bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    id_tipo_liquidacion_rel bigint,
+    concepto character varying(200) COLLATE pg_catalog."default" NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_jurisdiccion bigint,
+    CONSTRAINT t_tipos_liquidacion_pkey PRIMARY KEY (id_tipo_liquidacion),
+    CONSTRAINT fk_tipo_liq_rel FOREIGN KEY (id_tipo_liquidacion_rel)
+        REFERENCES public.t_tipos_liquidacion (id_tipo_liquidacion) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_tipos_liquidacion
+    OWNER to postgres;
+
+
+
+-- Table: public.t_tipos_notificaciones
+
+-- DROP TABLE IF EXISTS public.t_tipos_notificaciones;
+
+CREATE TABLE IF NOT EXISTS public.t_tipos_notificaciones
+(
+    id_tipo_noti bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    descripcion character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    modulo character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    plantilla character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    CONSTRAINT t_notificaciones_tipos_pkey PRIMARY KEY (id_tipo_noti)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_tipos_notificaciones
+    OWNER to postgres;
+
+
+
+-- Table: public.t_tipos_notificaciones
+
+-- DROP TABLE IF EXISTS public.t_tipos_notificaciones;
+
+CREATE TABLE IF NOT EXISTS public.t_tipos_notificaciones
+(
+    id_tipo_noti bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    descripcion character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    modulo character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    plantilla character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    CONSTRAINT t_notificaciones_tipos_pkey PRIMARY KEY (id_tipo_noti)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_tipos_notificaciones
+    OWNER to postgres;
+
+
+
+-- Table: public.t_tipos_notificaciones
+
+-- DROP TABLE IF EXISTS public.t_tipos_notificaciones;
+
+CREATE TABLE IF NOT EXISTS public.t_tipos_notificaciones
+(
+    id_tipo_noti bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    descripcion character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    modulo character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    plantilla character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    usr_baja character varying(20) COLLATE pg_catalog."default",
+    fec_baja timestamp(0) without time zone,
+    CONSTRAINT t_notificaciones_tipos_pkey PRIMARY KEY (id_tipo_noti)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_tipos_notificaciones
+    OWNER to postgres;
+
+
+
+
+-- Table: public.t_usuarios_new
+
+-- DROP TABLE IF EXISTS public.t_usuarios_new;
+
+CREATE TABLE IF NOT EXISTS public.t_usuarios_new
+(
+    usuario_id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    nombre_usuario character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    contrasena character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    estado smallint NOT NULL,
+    proveedor_id bigint,
+    jurisdiccion_id bigint NOT NULL,
+    id_persona character varying(10) COLLATE pg_catalog."default",
+    id_persona_old character varying(10) COLLATE pg_catalog."default",
+    CONSTRAINT t_usuarios_new_pkey PRIMARY KEY (usuario_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_usuarios_new
+    OWNER to postgres;
+
+
+
+
+-- Table: public.t_vales
+
+-- DROP TABLE IF EXISTS public.t_vales;
+
+CREATE TABLE IF NOT EXISTS public.t_vales
+(
+    id_vale bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    legajo_id bigint NOT NULL,
+    nro_vale bigint,
+    cuotas smallint,
+    fecha_emision timestamp(0) without time zone,
+    nro_cheque bigint,
+    concepto character varying(100) COLLATE pg_catalog."default",
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    estado bigint,
+    id_tipo_liquidacion bigint,
+    monto_total numeric,
+    CONSTRAINT t_vales_pkey PRIMARY KEY (id_vale),
+    CONSTRAINT fk_legajos FOREIGN KEY (legajo_id)
+        REFERENCES public.legajos (legajo_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_tipos_liquidacion_vale FOREIGN KEY (id_tipo_liquidacion)
+        REFERENCES public.t_tipos_liquidacion (id_tipo_liquidacion) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_vales
+    OWNER to postgres;
+
+
+
+
+-- Table: public.t_vales_det
+
+-- DROP TABLE IF EXISTS public.t_vales_det;
+
+CREATE TABLE IF NOT EXISTS public.t_vales_det
+(
+    id_vale_det bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    id_vale bigint NOT NULL,
+    anio smallint,
+    periodo smallint,
+    monto numeric(10,2),
+    saldos numeric(10,2),
+    pagado character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    periodo_id bigint,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_tipo_liquidacion_hijo bigint,
+    CONSTRAINT t_vales_det_pkey PRIMARY KEY (id_vale_det),
+    CONSTRAINT fk_id_vale FOREIGN KEY (id_vale)
+        REFERENCES public.t_vales (id_vale) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_vales_det
+    OWNER to postgres;
+
+
+
+-- Table: public.t_vales_det
+
+-- DROP TABLE IF EXISTS public.t_vales_det;
+
+CREATE TABLE IF NOT EXISTS public.t_vales_det
+(
+    id_vale_det bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    id_vale bigint NOT NULL,
+    anio smallint,
+    periodo smallint,
+    monto numeric(10,2),
+    saldos numeric(10,2),
+    pagado character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    periodo_id bigint,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_tipo_liquidacion_hijo bigint,
+    CONSTRAINT t_vales_det_pkey PRIMARY KEY (id_vale_det),
+    CONSTRAINT fk_id_vale FOREIGN KEY (id_vale)
+        REFERENCES public.t_vales (id_vale) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_vales_det
+    OWNER to postgres;
+
+
+
+
+-- Table: public.t_vales_det
+
+-- DROP TABLE IF EXISTS public.t_vales_det;
+
+CREATE TABLE IF NOT EXISTS public.t_vales_det
+(
+    id_vale_det bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    id_vale bigint NOT NULL,
+    anio smallint,
+    periodo smallint,
+    monto numeric(10,2),
+    saldos numeric(10,2),
+    pagado character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    periodo_id bigint,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_tipo_liquidacion_hijo bigint,
+    CONSTRAINT t_vales_det_pkey PRIMARY KEY (id_vale_det),
+    CONSTRAINT fk_id_vale FOREIGN KEY (id_vale)
+        REFERENCES public.t_vales (id_vale) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_vales_det
+    OWNER to postgres;
+
+
+
+
+-- Table: public.t_vales_det
+
+-- DROP TABLE IF EXISTS public.t_vales_det;
+
+CREATE TABLE IF NOT EXISTS public.t_vales_det
+(
+    id_vale_det bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    id_vale bigint NOT NULL,
+    anio smallint,
+    periodo smallint,
+    monto numeric(10,2),
+    saldos numeric(10,2),
+    pagado character varying(1) COLLATE pg_catalog."default" DEFAULT 'N'::character varying,
+    periodo_id bigint,
+    usr_ing character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT CURRENT_USER,
+    fec_ing timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP,
+    usr_mod character varying(20) COLLATE pg_catalog."default",
+    fec_mod timestamp(0) without time zone,
+    user_baja character varying(20) COLLATE pg_catalog."default",
+    fecha_baja timestamp(0) without time zone,
+    id_tipo_liquidacion_hijo bigint,
+    CONSTRAINT t_vales_det_pkey PRIMARY KEY (id_vale_det),
+    CONSTRAINT fk_id_vale FOREIGN KEY (id_vale)
+        REFERENCES public.t_vales (id_vale) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.t_vales_det
+    OWNER to postgres;
