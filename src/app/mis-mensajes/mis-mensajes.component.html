@@ -1,0 +1,257 @@
+<div>
+  <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+</div>
+<div class="container">
+  <div class="row">
+    <h1 class="display-1"><span style="color: #79B872;">Mis</span> Mensajes</h1>
+  </div>
+  <hr>
+  <div>
+    <button mat-raised-button color="success" class="btn-nuevo-mensaje" (click)="abrirModalInsertar()">
+      +
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="seleccionarTodo(true)">
+        <mat-icon>check_box</mat-icon>
+        <span>Seleccionar todo</span>
+      </button>
+      <button mat-menu-item (click)="seleccionarTodo(false)">
+        <mat-icon>check_box_outline_blank</mat-icon>
+        <span>Desmarcar todo</span>
+      </button>
+      <button [hidden]="this.nroTabActivo == 3 || this.nroTabActivo == 4" mat-menu-item
+        (click)="modalMensajesPasarFavoritos(true)">
+        <mat-icon>star</mat-icon>
+        <span>Marcar selección como favoritos</span>
+      </button>
+      <button [hidden]="this.nroTabActivo == 3" mat-menu-item (click)="modalMensajesPasarFavoritos(false)">
+        <mat-icon>star_border</mat-icon>
+        <span>Quitar selección de favoritos</span>
+      </button>
+      <button [hidden]="this.nroTabActivo == 2" mat-menu-item (click)="modalMensajesPasarLeido(true)">
+        <mat-icon>mark_email_read</mat-icon>
+        <span> Marcar selección como leído</span>
+      </button>
+      <button [hidden]="this.nroTabActivo == 2" mat-menu-item (click)="modalMensajesPasarLeido(false)">
+        <mat-icon>mark_email_unread</mat-icon>
+        <span>Marcar selección como no leído</span>
+      </button>
+      <button [hidden]="this.nroTabActivo == 3 || this.nroTabActivo == 4" mat-menu-item
+        (click)="modalMandarMensajesPapelera(true)">
+        <mat-icon>delete</mat-icon>
+        <span> Mandar selección a papelera</span>
+      </button>
+      <button [hidden]="this.nroTabActivo != 3" mat-menu-item (click)="modalMandarMensajesPapelera(false)">
+        <mat-icon>outgoing_mail</mat-icon>
+        <span> Mandar selección a recibidos</span>
+      </button>
+      <button [hidden]="this.nroTabActivo != 3" mat-menu-item (click)="modalEliminarMensajesPapelera()">
+        <mat-icon>delete_forever</mat-icon>
+        <span> Eliminar selección de la papelera</span>
+      </button>
+    </mat-menu>
+  </div>
+  <mat-tab-group (selectedTabChange)="cambiarPestania($event)" animationDuration="0ms">
+    <mat-tab label="Bandeja de Entrada">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="checkMensaje">
+          <th mat-header-cell *matHeaderCellDef>Seleccionar</th>
+          <td mat-cell *matCellDef="let mensaje" style="text-align: center; padding: 4px;">
+            <mat-checkbox class="example-margin" color="primary" [checked]="seleccionarTodos"
+              (change)="seleccionado(mensaje.id_bandeja_mensaje,$event)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="emisor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Emisor</th>
+          <td mat-cell *matCellDef="let mensaje" [ngClass]="mensaje.leido == 'N'? 'no-leido':null"
+            style="text-align: left; padding: 4px;">
+            <span [hidden]="!mensaje.favorito" style="color: #FFDB58;">★ </span>{{mensaje.apellido_nombre ||
+            "S/D"}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+          <td mat-cell *matCellDef="let mensaje" [ngClass]="mensaje.leido == 'N'? 'no-leido':null"
+            style="text-align: center; padding: 4px;"> {{mensaje.fecha ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="asunto">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Asunto </th>
+          <td mat-cell *matCellDef="let mensaje" [ngClass]="mensaje.leido == 'N'? 'no-leido':null"
+            style="text-align: left; padding: 4px;"> {{mensaje.asunto ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ver_mensaje">
+          <th mat-header-cell *matHeaderCellDef> Ver Mensaje </th>
+          <td mat-cell *matCellDef="let mensaje"> <button type="button" class="btn btn-info"
+              (click)="abrirModalEditar(mensaje.id_bandeja_mensaje,true,true)" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-eye" style="color:white"></i>
+            </button> </td>
+        </ng-container>
+        <ng-container matColumnDef="ver_respuesta">
+          <th mat-header-cell *matHeaderCellDef> Ver Mensaje Original </th>
+          <td mat-cell *matCellDef="let mensaje"> <button type="button" class="btn btn-warning" (click)="true"
+              data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-eye" style="color:white"></i>
+            </button> </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnas1"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas1;"></tr>
+      </table>
+    </mat-tab>
+
+    <mat-tab label="Enviados" #enviados>
+      <table mat-table [dataSource]="dataSource2" matSort>
+        <ng-container matColumnDef="checkMensaje">
+          <th mat-header-cell *matHeaderCellDef>Seleccionar</th>
+          <td mat-cell *matCellDef="let mensaje" style="text-align: center; padding: 4px;">
+            <mat-checkbox class="example-margin" color="primary" [checked]="seleccionarTodos"
+              (change)="seleccionado(mensaje.id_bandeja_mensaje,$event)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="receptor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Receptor </th>
+          <td mat-cell *matCellDef="let mensaje" style="text-align: left; padding: 4px;">
+            <span [hidden]="!mensaje.favorito" style="color: #FFDB58;">★ </span>{{mensaje.apellido_nombre_receptor ||
+            "S/D"}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+          <td mat-cell *matCellDef="let mensaje" style="text-align: center; padding: 4px;"> {{mensaje.fecha ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="asunto">
+          <th mat-header-cell *matHeaderCellDef> Asunto </th>
+          <td mat-cell *matCellDef="let mensaje" style="text-align: left; padding: 4px;"> {{mensaje.asunto ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ver_mensaje">
+          <th mat-header-cell *matHeaderCellDef> Ver Mensaje </th>
+          <td mat-cell *matCellDef="let mensaje"> <button type="button" class="btn btn-info"
+              (click)="abrirModalEditar(mensaje.id_bandeja_mensaje,true,false)" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-eye" style="color:white"></i>
+            </button> </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnas2"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas2;"></tr>
+      </table>
+    </mat-tab>
+
+    <mat-tab label="Papelera">
+      <table mat-table [dataSource]="dataSource3" matSort>
+        <ng-container matColumnDef="checkMensaje">
+          <th mat-header-cell *matHeaderCellDef>Seleccionar</th>
+          <td mat-cell *matCellDef="let mensaje" style="text-align: center; padding: 4px;">
+            <mat-checkbox class="example-margin" color="primary" [checked]="seleccionarTodos"
+              (change)="seleccionado(mensaje.id_bandeja_mensaje,$event)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="receptor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Emisor </th>
+          <td mat-cell *matCellDef="let mensaje"
+            [ngClass]="mensaje.leido == 'N' && mensaje.legajo_id != mensaje.legajo_emisor? 'no-leido':null"
+            style="text-align: left; padding: 4px;">
+            {{mensaje.legajo_id == mensaje.legajo_emisor? 'YO' :mensaje.apellido_nombre}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; padding: 4px;"> Fecha </th>
+          <td mat-cell *matCellDef="let mensaje"
+            [ngClass]="mensaje.leido == 'N' && mensaje.legajo_id != mensaje.legajo_emisor? 'no-leido':null">
+            {{mensaje.fecha ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="asunto">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Asunto </th>
+          <td mat-cell *matCellDef="let mensaje"
+            [ngClass]="mensaje.leido == 'N' && mensaje.legajo_id != mensaje.legajo_emisor? 'no-leido':null"
+            style="text-align: left; padding: 4px;">
+            {{mensaje.asunto ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ver_mensaje">
+          <th mat-header-cell *matHeaderCellDef> Ver Mensaje </th>
+          <td mat-cell *matCellDef="let mensaje"> <button type="button" class="btn btn-info"
+              (click)="mensaje.legajo_id == mensaje.legajo_emisor? abrirModalEditar(mensaje.id_bandeja_mensaje,true,false): abrirModalEditar(mensaje.id_bandeja_mensaje,true,true)"
+              data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-eye" style="color:white"></i>
+            </button> </td>
+        </ng-container>
+        <ng-container matColumnDef="ver_respuesta">
+          <th mat-header-cell *matHeaderCellDef> Ver Mensaje Original </th>
+          <td mat-cell *matCellDef="let mensaje"> <button type="button" class="btn btn-warning" (click)="true"
+              data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-eye" style="color:white"></i>
+            </button></td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnas3"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas3;"></tr>
+      </table>
+    </mat-tab>
+
+    <mat-tab label="Favoritos">
+      <table mat-table [dataSource]="dataSource4" matSort>
+        <ng-container matColumnDef="checkMensaje">
+          <th mat-header-cell *matHeaderCellDef>Seleccionar</th>
+          <td mat-cell *matCellDef="let mensaje" style="text-align: center; padding: 4px;">
+            <mat-checkbox class="example-margin" color="primary" [checked]="seleccionarTodos"
+              (change)="seleccionado(mensaje.id_bandeja_mensaje,$event)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="receptor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Emisor </th>
+          <td mat-cell *matCellDef="let mensaje"
+            [ngClass]="mensaje.leido == 'N' && mensaje.legajo_id != mensaje.legajo_emisor? 'no-leido':null"
+            style="text-align: left; padding: 4px;">
+            {{mensaje.legajo_id == mensaje.legajo_emisor? 'YO' :mensaje.apellido_nombre}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; padding: 4px;"> Fecha </th>
+          <td mat-cell *matCellDef="let mensaje"
+            [ngClass]="mensaje.leido == 'N' && mensaje.legajo_id != mensaje.legajo_emisor? 'no-leido':null">
+            {{mensaje.fecha ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="asunto">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Asunto </th>
+          <td mat-cell *matCellDef="let mensaje"
+            [ngClass]="mensaje.leido == 'N' && mensaje.legajo_id != mensaje.legajo_emisor? 'no-leido':null"
+            style="text-align: left; padding: 4px;">
+            {{mensaje.asunto ||
+            "S/D"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ver_mensaje">
+          <th mat-header-cell *matHeaderCellDef> Ver Mensaje </th>
+          <td mat-cell *matCellDef="let mensaje"> <button type="button" class="btn btn-info"
+              (click)="mensaje.legajo_id == mensaje.legajo_emisor? abrirModalEditar(mensaje.id_bandeja_mensaje,true,false): abrirModalEditar(mensaje.id_bandeja_mensaje,true,true)"
+              data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-eye" style="color:white"></i>
+            </button> </td>
+        </ng-container>
+        <ng-container matColumnDef="ver_respuesta">
+          <th mat-header-cell *matHeaderCellDef> Ver Mensaje Original </th>
+          <td mat-cell *matCellDef="let mensaje"> <button type="button" class="btn btn-warning" (click)="true"
+              data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-eye" style="color:white"></i>
+            </button></td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnas4"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas4;"></tr>
+      </table>
+    </mat-tab>
+  </mat-tab-group>
+  <mat-paginator [pageSizeOptions]="[4, 10, 20]" showFirstLastButtons aria-label="Seleccione Mensajes" style="float: left;">
+  </mat-paginator>
+  <hr>
+</div>

@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{titulo}}</h2>
+<div class="card">
+  <div class="card-body">
+    <mat-dialog-content>
+      <div>
+        <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+      </div>
+      <div class="row">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="anio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Año </th>
+            <td mat-cell *matCellDef="let detalleAdelanto"> {{detalleAdelanto.anio || "S/D"}} </td>
+          </ng-container>
+          <ng-container matColumnDef="mes">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Mes </th>
+            <td mat-cell *matCellDef="let detalleAdelanto"> {{detalleAdelanto.mes || "S/D"}} </td>
+          </ng-container>
+          <ng-container matColumnDef="monto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
+            <td mat-cell *matCellDef="let detalleAdelanto"> {{detalleAdelanto.monto || "0"}} </td>
+          </ng-container>
+          <ng-container matColumnDef="pagado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pagado </th>
+            <td mat-cell *matCellDef="let detalleAdelanto"> {{detalleAdelanto.pagado || "S/D"}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons aria-label="Seleccione Detalles">
+        </mat-paginator>
+      </div>
+      <hr>
+      <div class="row" style="float: right; margin-right: 1rem;">
+        <button mat-raised-button mat-dialog-close color="warn">Cerrar</button>
+      </div>
+    </mat-dialog-content>
+  </div>
+</div>

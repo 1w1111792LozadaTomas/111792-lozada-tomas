@@ -1,0 +1,106 @@
+<div>
+  <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+</div>
+<div class="container">
+  <div class="row">
+    <h1 class="display-1"><span style="color: #79B872;">Licencias</span> Solicitadas</h1>
+  </div>
+  <hr>
+  <div class="row" [hidden]="!LicenciasCargadas">
+    <mat-form-field appearance="outline" style="margin-right: 0px;margin-left: auto;">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese filtro de búsqueda" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="licencia_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número</th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: right;padding: 4px;">
+          {{licencia.licencia_id ||
+          "S/D"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="nombre_licencia">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Licencia </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: left;padding: 4px;">
+          {{licencia.nombre_licencia ||
+          "S/D"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="anio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Corresp. Año </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: right;padding: 4px;">
+          {{licencia.anio || "S/D"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="inicio1">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: center;padding: 4px;">
+          {{licencia.inicio1 || "S/D"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fin1">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Fin </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: center;padding: 4px;">
+          {{licencia.fin1 || "S/D"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="detalles">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Detalle </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: left;padding: 4px;">
+          {{licencia.detalles || "S/D"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: center;padding: 4px;">
+          {{licencia.estado || "S/D"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fecha_baja">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Baja </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"
+          style="text-align: center;padding: 4px;">
+          {{licencia.fecha_baja}} </td>
+      </ng-container>
+      <ng-container matColumnDef="ver">
+        <th mat-header-cell *matHeaderCellDef> Ver </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}">
+          <button type="button" class="btn btn-info" (click)="abrirModalEditar(licencia.licencia_id,true)"
+            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fa-solid fa-eye" style="color:white"></i>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="editar">
+        <th mat-header-cell *matHeaderCellDef> Editar </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"> <button type="button"
+            class="btn btn-warning" [hidden]="licencia.fecha_baja || licencia.estado != 'PARA APROBAR'"
+            (click)="abrirModalEditar(licencia.licencia_id,false)" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop">
+            <i class="fa-solid fa-pen" style="color:white"></i>
+          </button> </td>
+      </ng-container>
+      <ng-container matColumnDef="anular">
+        <th mat-header-cell *matHeaderCellDef> Anular </th>
+        <td mat-cell *matCellDef="let licencia" [ngClass]="{red: licencia.fecha_baja}"> <button type="button"
+            class="btn btn-danger" [hidden]="licencia.fecha_baja || licencia.estado != 'PARA APROBAR'"
+            (click)="modalBorrar(licencia.licencia_id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fa-solid fa-trash-can" style="color:white"></i>
+          </button> </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[4,10,20]" showFirstLastButtons aria-label="Seleccione Recibos">
+    </mat-paginator>
+  </div>
+  <div>
+    <hr>
+    <button mat-raised-button color="success" (click)="abrirModalInsertar()" style="float: right;">
+      Agregar Licencia
+    </button>
+  </div>
+</div>

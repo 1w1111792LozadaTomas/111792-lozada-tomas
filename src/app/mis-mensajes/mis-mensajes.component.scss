@@ -1,0 +1,38 @@
+.tableHead {
+  background-color: #79B872;
+}
+
+h1 {
+  margin: 3rem;
+  margin-bottom: 3rem;
+  font-size: 60px;
+}
+
+table {
+  width: 100%;
+  text-align: center;
+}
+
+.mat-header-cell {
+  background-color: #79B872;
+  color: black;
+}
+
+.mat-success {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.no-leido {
+  font-weight: bold;
+}
+
+.btn-nuevo-mensaje {
+    display:block;
+    width: 60px;
+    height:60px;
+    transform: scale(0.8, 0.8);
+    border-radius: 50%;
+    background-color: #79B872;
+    font-size:30px;
+  }

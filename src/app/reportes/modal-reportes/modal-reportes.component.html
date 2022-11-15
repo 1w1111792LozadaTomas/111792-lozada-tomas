@@ -1,0 +1,21 @@
+<div class="container">
+  <h2 mat-dialog-title>{{nombreReporte}}</h2>
+  <div class="card-body">
+    <mat-dialog-content>
+      <div>
+        <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div id="divChart" [ngClass]="chartBar? 'divChartBar' : 'divChartPie'">
+            <canvas id="chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+  </div>
+  <hr>
+  <div class="row" style="float: right; margin-right: 1rem;">
+    <button mat-raised-button mat-dialog-close color="warn">Cerrar</button>
+  </div>
+</div>

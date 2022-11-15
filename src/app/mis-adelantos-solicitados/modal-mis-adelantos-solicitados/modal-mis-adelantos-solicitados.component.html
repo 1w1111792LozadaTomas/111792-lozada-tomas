@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>{{titulo}}</h2>
+<div class="card">
+  <div class="card-body">
+    <mat-dialog-content>
+      <div>
+        <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+      </div>
+      <form [formGroup]="AdelantosForm" (submit)="submitFormulario()">
+        <div class="row">
+          <div class="dropdown col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de Liquidación</mat-label>
+              <mat-select formControlName="IdTipoLiquidacion" name="IdTipoLiquidacion">
+                <mat-option *ngFor="let tipoLiquidacion of ListadoTiposLiquidacion"
+                  [value]="tipoLiquidacion.id_tipo_liquidacion">{{tipoLiquidacion.t_tipos_liquidacion}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-6 colFullWidth">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Concepto:</mat-label>
+              <input matInput formControlName="Concepto">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 colFullWidth">
+            <mat-form-field appearance="outline">
+              <mat-label>Seleccione Cuotas</mat-label>
+              <mat-select formControlName="Cuotas" name="Cuotas">
+                <mat-option *ngFor="let cuota of ListadoCuotas" [value]="cuota">
+                  {{cuota}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-6 colFullWidth">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Monto:</mat-label>
+              <input matInput formControlName="Monto">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="dropdown col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Año Periodo</mat-label>
+              <mat-select formControlName="Anio" name="Anio" (ngModelChange)="getPeriodos()">
+                <mat-option *ngFor="let anio of ListadoAnios" [disabled]="anio < anioActual" [value]="anio">{{anio}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="dropdown col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Mes Período</mat-label>
+              <mat-select formControlName="PeriodoId" name="PeriodoId">
+                <mat-option *ngFor="let periodo of ListadoPeriodos"
+                  [disabled]="periodo.mes < mesActual && anioSeleccionado == anioActual" [value]="periodo.periodo_id">
+                  {{periodo.mes}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <hr>
+        <div class="row" style="float: right; margin-right: 1rem;">
+          <button mat-raised-button color="success" style=" margin-right: 0.5rem;" btn-sb type="submit"
+            [disabled]="botonDesactivado">{{nombreBoton}}</button>
+          <button mat-raised-button mat-dialog-close color="warn">Cancelar</button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="row">
+    <h1 class="display-1"><span style="color: #79B872;">Mis</span> Reportes</h1>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="container" style="width:20%;text-align: center;">
+      <div class="row">
+        <div>
+          <form>
+            <div class="dropdown">
+              <mat-form-field appearance="outline">
+                <mat-label>Seleccione una Categoría</mat-label>
+                <mat-select name="listaCategoriasRep" [(ngModel)]="valorComboCat"
+                  (ngModelChange)="OnChangeComboCategorias()">
+                  <mat-option *ngFor="let categoria of categoriasList" [value]="categoria.id">{{categoria.nombre}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container" style="width:20%;text-align: center;">
+      <div class="row">
+        <div>
+          <form>
+            <div class="dropdown">
+              <mat-form-field appearance="outline">
+                <mat-label>Seleccione un Reporte</mat-label>
+                <mat-select name="listaReportes" [(ngModel)]="valorComboRep"
+                  [attr.disabled]="!valorComboCat ? '' : null" (ngModelChange)="OnChangeComboReportes()">
+                  <mat-option *ngFor="let reporte of reportesList" [value]="reporte.id">{{reporte.nombre}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container" style="width:20%;text-align: center;">
+      <div class="row">
+        <div>
+          <form>
+            <div class="dropdown">
+              <mat-form-field appearance="outline">
+                <mat-label>Seleccione un año</mat-label>
+                <mat-select [(ngModel)]="anioSeleccionado" name="listaAnios" (ngModelChange)="OnChangeComboAnio()">
+                  <mat-option *ngFor="let anio of listadoAnios" [value]="anio">{{anio}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

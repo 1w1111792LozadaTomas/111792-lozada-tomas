@@ -1,0 +1,219 @@
+.menuBurger {
+  display: inline-block;
+  cursor: pointer;
+  background-color: #333;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+  width: 35px;
+  height: 5px;
+  background-color: #333;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+.logo-sigemyt {
+  margin-top: 38rem;
+  height: 8rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 58px 0 0;
+  background-color: #79B872;
+  color: #333;
+  /* Height of navbar */
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+  width: 240px;
+  z-index: 600;
+}
+
+.sidebar .active {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+  background-color: #477742;
+  border: 3px solid #477742;
+  color: #fff;
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  /* Scrollable contents if viewport is shorter than content. */
+}
+
+.opcion-menu-navbar {
+  background-color: #79B872;
+  cursor: pointer;
+  border-radius: 0 !important;
+}
+
+.mask {
+  background-color: rgba(71, 119, 66, 0.5);
+  color: #fff;
+  cursor: pointer;
+}
+
+.body {
+  background-color: #fff;
+  color: black;
+}
+
+.titulo {
+  font-size: 60px;
+  text-align: center;
+}
+
+.header-navbar {
+  position: fixed;
+  top: 0;
+  z-index: 1030;
+}
+
+.titulo-navbar {
+  font-size: 40px;
+  margin-left: 2rem;
+}
+
+.btn {
+  cursor: pointer;
+  margin: 20px;
+}
+
+.icon-bar {
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  margin: 3px;
+  position: relative;
+}
+
+.my-icon {
+  vertical-align: middle;
+  font-size: 40px;
+}
+
+.icono-menu {
+  margin-right: 0.5rem;
+}
+
+.icono-salir {
+  position: absolute;
+  right: 0;
+  margin-right: 1rem;
+  zoom: 0.70;
+}
+
+.opcion-navbar:hover {
+  background-color: #4c9145;
+  color: #fff;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  color: #79B872 !important;
+}
+
+::ng-deep.mat-form-field-underline {
+  background-color: #79B872 !important;
+}
+
+::ng-deep.mat-form-field-ripple {
+  background-color: #79B872 !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #79B872 !important;
+}
+
+::ng-deep .mat-form-field-empty.mat-form-field-label {
+  color: black !important;
+}
+
+::ng-deep .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: #79B872;
+}
+
+::ng-deep .mat-option-pseudo-checkbox.mat-pseudo-checkbox-checked {
+  background-color: #79B872;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.body-fondo {
+  height: 100vh;
+  background-image: url("/assets/images/Fondo.png");
+  background-repeat: no-repeat;
+  background-position: 100%;
+  background-size: 40%;
+  background-position-y: -30;
+}
+
+.menuNotificaciones {
+  color: #fff;
+  cursor: pointer;
+  margin-left: 70rem;
+}
+
+.menuNotificaciones:hover {
+  color: #79B872;
+}
+
+.icon-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+}
+
+.icon-button__badge {
+  position: absolute;
+  top: 6px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background: #79B872;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.no-leido {
+  height: 10px;
+  width: 10px;
+  background-color: #79B872;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.no-leido-texto {
+  font-weight: bold;
+}
+
+::ng-deep.mat-menu-panel {
+  max-width: none !important;
+}

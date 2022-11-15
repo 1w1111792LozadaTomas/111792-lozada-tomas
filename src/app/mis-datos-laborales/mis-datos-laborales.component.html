@@ -1,0 +1,89 @@
+<div>
+  <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+</div>
+<div class="container" [hidden]="!datosCargados">
+  <div class="row">
+    <h1 class="display-1 nombre-usuario">Bienvenido <span class="nombre-usuario"
+        style="color: #79B872;">{{nombreCompletoUsuario}}</span></h1>
+  </div>
+  <hr>
+  <div>
+    <div class="container">
+      <div class="row">
+        <h3 class="display-1 legajo-usuario">Legajo: {{legajoUsuario}}</h3>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size: 20px;" class="card-header"><i class="fas fa-user-alt fa-fw me-2"></i>Datos Personales:
+      </div>
+      <div class="card-body">
+        <form [formGroup]="misDatosLaboralesForm">
+          <div class="row">
+            <div class="col-6 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Fecha de Ingreso:</mat-label>
+                <input matInput formControlName="fechaIngreso">
+              </mat-form-field>
+            </div>
+            <div class="col-6 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Fecha de Antiguedad:</mat-label>
+                <input matInput formControlName="fechaAntiguedad">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Area:</mat-label>
+                <input matInput formControlName="area">
+              </mat-form-field>
+            </div>
+            <div class="col-6 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Categoría:</mat-label>
+                <input matInput formControlName="categoria">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Sueldo:</mat-label>
+                <input matInput formControlName="sueldo">
+              </mat-form-field>
+            </div>
+            <div class="col-6 colFullWidth ">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Fecha Escalafón:</mat-label>
+                <input matInput formControlName="fechaEscalafon">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Estado:</mat-label>
+                <input matInput formControlName="estado">
+              </mat-form-field>
+            </div>
+            <div class="col-6 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Situación de Revista:</mat-label>
+                <input matInput formControlName="situacionRevista">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 colFullWidth">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Dirección:</mat-label>
+                <input matInput formControlName="direccion">
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<h2 mat-dialog-title>{{titulo}}</h2>
+<div class="card">
+  <div class="card-body">
+    <mat-dialog-content style="height: 800px">
+      <div>
+        <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+      </div>
+      <form [formGroup]="FamiliarForm" (submit)="submitFormulario()">
+        <div class="row">
+          <div class="col-6 colFullWidth">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Nombre:</mat-label>
+              <input matInput formControlName="Nombre">
+            </mat-form-field>
+          </div>
+          <div class="col-6 colFullWidth">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Apellido:</mat-label>
+              <input matInput formControlName="Apellido">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="dropdown col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de Identificacion</mat-label>
+              <mat-select formControlName="IdTipoIdentificacion" name="IdTipoIdentificacion">
+                <mat-option *ngFor="let tipoIdentificacion of ListadoTiposIdentificacion"
+                  [value]="tipoIdentificacion.id_tipo_identificacion">{{tipoIdentificacion.n_tipo_identificacion}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-6 colFullWidth">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Documento:</mat-label>
+              <input matInput formControlName="NroDocumento">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="dropdown col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Parentesco</mat-label>
+              <mat-select formControlName="IdParentesco" name="IdParentesco">
+                <mat-option *ngFor="let parentesco of ListadoParentescos" [value]="parentesco.id">{{parentesco.nombre}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="dropdown col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Escolaridad</mat-label>
+              <mat-select formControlName="Escolaridad" name="Escolaridad">
+                <mat-option *ngFor="let escolaridad of ListadoEscolaridades" [value]="escolaridad.id">
+                  {{escolaridad.nombre}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-raised-button style="margin-left:1rem;" type="button"
+              [matTooltip]="!soloLectura? 'Adjuntar Certificado de Escolaridad':'Ver Certificado de Escolaridad Adjuntado'"
+              [style.background]="archivoEscolaridad?'#4CAF50':'#F93154'" class="btn" data-bs-toggle="modal"
+              (click)="soloLectura? verArchivo(this.archivoEscolaridad,this.nombreArchivoEscolaridad) :fileInput1.click()"
+              data-bs-target="#staticBackdrop">
+              <i class="fa-solid fa-file" style="color:white"></i>
+            </button>
+            <input hidden (change)="onFileChangeEscolaridad($event)" #fileInput1 type="file" id="file"
+              accept="application/pdf" [disabled]="soloLectura">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 colFullWidth">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Nacimiento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="FecNac">
+              <mat-hint>DD/MM/AAAA</mat-hint>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-card>
+          <div class="row" style="text-align: center;">
+            <div class="col-4 colFullWidth">
+              <mat-checkbox class="example-margin" color="primary" formControlName="ACargo">A Cargo
+              </mat-checkbox>
+              <button mat-raised-button style="margin-left:1rem;" type="button"
+                [matTooltip]="!soloLectura? 'Adjuntar Partida de Nacimiento':'Ver Partida de Nacimiento Adjuntada'"
+                [style.background]="archivoPartida?'#4CAF50':'#F93154'" class="btn" data-bs-toggle="modal"
+                (click)="soloLectura? verArchivo(this.archivoPartida,this.nombreArchivoPartida) :fileInput2.click()"
+                data-bs-target="#staticBackdrop">
+                <i class="fa-solid fa-file" style="color:white;"></i>
+              </button>
+              <input hidden (change)="onFileChangePartida($event)" #fileInput2 type="file" id="file"
+                accept="application/pdf" [disabled]="soloLectura">
+            </div>
+            <div class="col-4 colFullWidth">
+              <mat-checkbox class="example-margin" color="primary" formControlName="Discapacitado">Discapacidad
+              </mat-checkbox>
+              <button mat-raised-button style="margin-left:1rem;" type="button"
+                [matTooltip]="!soloLectura? 'Adjuntar Certificado de Discapacidad':'Ver Certificado de Discapacidad Adjuntado'"
+                [style.background]="archivoDiscapacidad?'#4CAF50':'#F93154'" class="btn" data-bs-toggle="modal"
+                (click)="soloLectura? verArchivo(this.archivoDiscapacidad,this.nombreArchivoDiscapacidad) :fileInput3.click()"
+                data-bs-target="#staticBackdrop"><i class="fa-solid fa-file" style="color:white"></i>
+              </button>
+              <input hidden (change)="onFileChangeDiscapacidad($event)" #fileInput3 type="file" id="file"
+                accept="application/pdf" [disabled]="soloLectura">
+            </div>
+            <div class="col-4 colFullWidth">
+              <mat-checkbox class="example-margin" color="primary" formControlName="AdicionalObSocial">Adicional Obra
+                Social
+              </mat-checkbox>
+            </div>
+          </div>
+        </mat-card>
+        <hr>
+        <div class="row" style="float: right; margin-right: 1rem;">
+          <button mat-raised-button color="success" style=" margin-right: 0.5rem;" btn-sb type="submit"
+            [hidden]="soloLectura" [disabled]="botonDesactivado">{{nombreBoton}}</button>
+          <button mat-raised-button mat-dialog-close color="warn">Cancelar</button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+</div>

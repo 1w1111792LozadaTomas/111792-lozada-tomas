@@ -1,0 +1,27 @@
+.nombre-usuario {
+  margin-top: 1rem;
+  font-size: 60px;
+}
+
+.legajo-usuario {
+  font-size: 30px;
+}
+
+.card {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  color: black;
+}
+
+.card-header {
+  background-color: #79B872;
+}
+
+.colFullWidth * {
+  width: 100%;
+}
+
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after,
+.mat-input-element:disabled {
+  color: rgba(0, 0, 0, 1) !important;
+}

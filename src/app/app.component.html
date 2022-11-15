@@ -1,0 +1,129 @@
+<mat-sidenav-container>
+  <mat-sidenav class="sidebar" #sidenav mode="side" [(opened)]="opened">
+    <div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/misDatosLaborales">
+        <a class="list-group-item list-group-item-action py-2 opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active">
+          <i class="fas fa-address-card fa-fw me-2 icono-menu"></i><span>Mis Datos Laborales</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/misRecibosDeSueldo">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active">
+          <i class="fas fa-file-invoice-dollar fa-fw me-2"></i><span> Recibos de Sueldo</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/misLicenciasSolicitadas">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar hadow-1-strong opcion-navbar"
+          routerLinkActive="active"><i class="fas fa-file-medical fa-fw me-2 icono-menu"></i>
+          <span>Licencias Solicitadas</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/misAdelantosSolicitados">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active"><i class="fas fa-file-export fa-fw me-2 icono-menu"></i><span>Adelantos
+            Solicitados</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/miFamilia">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active">
+          <i class="fas fa-users fa-fw me-2 icono-menu"></i><span>Mi Familia</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/misTributos">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active"><i class="fas fa-hand-holding-usd fa-fw me-2 icono-menu"></i><span>Mis
+            Tributos</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/misMensajes">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active"><i class="fas fa-envelope fa-fw me-2 icono-menu"></i><span>Mis Mensajes</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/reportes">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active">
+          <i class="fas fa-bar-chart fa-fw me-2 icono-menu"></i><span>Reportes</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/terminosYCondiciones">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active">
+          <i class="fas fa-info fa-fw me-2 icono-menu"></i><span>Términos y Condiciones</span>
+        </a>
+        <div class="mask"></div>
+      </div>
+      <!-- <div class="bg-image hover-overlay ripple shadow-1-strong rounded" routerLink="/estados">
+        <a class="list-group-item list-group-item-action py-2 ripple opcion-menu-navbar shadow-1-strong opcion-navbar"
+          routerLinkActive="active">
+          <i class="fas fa-add fa-fw me-2 icono-menu"></i><span>Cambiar Estados</span>
+        </a>
+        <div class="mask"></div>
+      </div> -->
+      <div class="bg-dark logo-sigemyt">
+        <div style="text-align: center; color: white;font-size:50px;margin-top: 3rem;">
+          <p><strong>SIGEM</strong><strong style="color:green;">y</strong><strong>T</strong></p>
+        </div>
+        <div style="text-align:center; margin-top: 1.5rem; color: white;">
+          <p>2017-2022</p>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content class="body body-fondo ">
+    <div>
+      <mat-toolbar class="header-navbar bg-dark">
+        <div (click)="onClickBurger()" (click)="sidenav.toggle()" lass="btn" style="cursor: pointer;">
+          <div class="icon-bar" [@hamburguerX]="isHamburguer ? 'hamburguer' : 'topX'"></div>
+          <div class="icon-bar" [@hamburguerX]="isHamburguer ? 'hamburguer' : 'hide'"></div>
+          <div class="icon-bar" [@hamburguerX]="isHamburguer ? 'hamburguer' : 'bottomX'"></div>
+        </div>
+        <div class="titulo-navbar" style="color: white;"><strong style="color:green;">Mi</strong> Legajo
+        </div>
+        <div>
+          <button mat-icon-button [matMenuTriggerFor]="menu" class="menuNotificaciones"
+            aria-label="Example icon-button with a menu">
+            <mat-icon class="icon-button">{{notiNoLeidas==0?'notifications_none':'notifications'}}</mat-icon>
+            <span [hidden]="notiNoLeidas==0?true:null" class="icon-button__badge">{{notiNoLeidas}}</span>
+          </button>
+          <mat-menu #menu="matMenu" xPosition="before">
+            <mat-card>
+              <div class="row" style="text-align: center;">
+                <div class="col-6">
+                  <button mat-button color="primary" routerLink="/notificaciones">Ver Todas</button>
+                </div>
+                <div class="col-6">
+                  <button (click)="SetNotificacionMarcarLeidaMasiva()" mat-button color="primary">Marcar Todo Como
+                    Leído</button>
+                </div>
+              </div>
+            </mat-card>
+            <button [hidden]="listadoNotificaciones != null" mat-menu-item>No
+              hay notificaciones</button>
+            <button mat-menu-item *ngFor="let notificacion of listadoNotificaciones">
+              <div (click)="SetNotificacionMarcarLeida(notificacion.id_noti,notificacion.modulo)">
+                <span [ngClass]="!notificacion.leido? 'no-leido-texto':null"><span *ngIf="!notificacion.leido"
+                    class="no-leido"></span>{{notificacion.fec_ing + ' | '
+                  +notificacion.plantilla}}</span>
+              </div>
+            </button>
+          </mat-menu>
+        </div>
+      </mat-toolbar>
+    </div>
+    <div style="margin-top: 5rem;">
+      <router-outlet>
+      </router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

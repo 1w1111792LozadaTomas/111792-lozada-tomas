@@ -1,0 +1,112 @@
+<h2 mat-dialog-title>{{titulo}}</h2>
+<div class="card">
+  <div class="card-body">
+    <mat-dialog-content>
+      <div>
+        <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+      </div>
+      <form [formGroup]="MensajeForm" (submit)="submitFormulario()" style="margin-left:1rem;margin-right:1rem">
+        <div class="row">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>{{nombreSelectDestinatario}}</mat-label>
+            <mat-select formControlName="IdLegajoDestinatario" name="IdLegajoD">
+              <mat-option *ngFor="let destinatario of ListadoDestinatarios" [value]="destinatario.legajo_id">
+                {{destinatario.nombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="example-full-width" appearance="outline" style="width: 100%;">
+            <mat-label>Asunto:</mat-label>
+            <input matInput formControlName="Asunto">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-label>Mensaje:</mat-label>
+          <textarea id="txtMensaje" formControlName="Mensaje1" class="form-control" style=" height:160px;"></textarea>
+        </div>
+        <br>
+        <div class="row" [hidden]="!this.archivoMensaje && this.idEditar">
+          <button mat-raised-button color="success" type="button" class="btn" data-bs-toggle="modal"
+          [matTooltip]="this.insertar?'Adjuntar Archivo':'Ver Archivo Adjunto'"
+            (click)="soloLectura? verArchivo(this.archivoMensaje,this.nombreArchivoMensaje) :fileInput.click()"
+            data-bs-target="#staticBackdrop"><i class="fa-solid fa-file" style="color:white"></i>
+          </button>
+          <mat-label [hidden]="!this.archivoMensaje || this.idEditar" style="margin-left:1rem">
+            <b>Archivo Cargado</b>
+          </mat-label>
+          <input hidden (change)="onFileChange($event)" #fileInput type="file" id="file" accept="application/pdf"
+            [disabled]="soloLectura">
+        </div>
+        <div [hidden]="!respuestaAbierto">
+          <hr>
+          <div class="row">
+            <mat-form-field class="example-full-width" appearance="outline" style="width: 100%;">
+              <mat-label>En respuesta a:</mat-label>
+              <input matInput formControlName="Asunto">
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-label>Respuesta:</mat-label>
+            <textarea id="txtMensajeR" formControlName="MensajeR" class="form-control"
+              style=" height:160px;"></textarea>
+          </div>
+          <br>
+          <div class="row">
+            <button mat-raised-button color="warning" type="button" class="btn" data-bs-toggle="modal"
+              matTooltip="Adjuntar Archivo"
+              (click)="fileInputR.click()" data-bs-target="#staticBackdrop"><i class="fa-solid fa-file"
+                style="color:white"></i>
+            </button>
+            <mat-label [hidden]="!this.archivoMensajeR" style="margin-left:1rem">
+              <b>Archivo Cargado</b>
+            </mat-label>
+            <input hidden (change)="onFileChangeRespuesta($event)" #fileInputR type="file" id="file"
+              accept="application/pdf">
+          </div>
+        </div>
+        <div [hidden]="!originalAbierto">
+          <hr>
+          <div class="row">
+            <mat-form-field class="example-full-width" appearance="outline" style="width: 100%;">
+              <mat-label>Asunto original:</mat-label>
+              <input matInput formControlName="AsuntoOriginal">
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-label>Mensaje Original:</mat-label>
+            <textarea id="txtMensajeOriginal" formControlName="MensajeOriginal" class="form-control"
+              style=" height:160px;"></textarea>
+          </div>
+          <br>
+          <div class="row">
+            <button mat-raised-button color="secondary" type="button" class="btn" data-bs-toggle="modal"
+             matTooltip="Ver Archivo Adjunto"
+              [hidden]="!archivoMensajeOriginal"
+              (click)="verArchivo(this.archivoMensajeOriginal,this.nombreArchivoMensajeOriginal)"
+              data-bs-target="#staticBackdrop"><i class="fa-solid fa-file" style="color:white"></i>
+            </button>
+            <input hidden (change)="onFileChangeRespuesta($event)" #fileInputO type="file" id="file"
+              accept="application/pdf">
+          </div>
+        </div>
+        <hr>
+        <div class="row" style="float: right; margin-right: 1rem;">
+          <button mat-raised-button color="warning"
+            [hidden]="soloLectura && !esRespuesta || insertar || respuestaAbierto" [disabled]="botonDesactivado"
+            style="margin-right: 0.5rem;" type="button"
+            (click)="this.tieneMensajeRespuesta? alertaRespuesta(): respuestaAbierto = true">Responder</button>
+          <button mat-raised-button color="secondary" [hidden]="insertar || originalAbierto || esMensajeRespuesta"
+            [disabled]="botonDesactivado" style="margin-right: 0.5rem;" type="button"
+            (click)="originalAbierto = true">Ver Original</button>
+          <button mat-raised-button color="warning" [hidden]="!respuestaAbierto" [disabled]="botonDesactivado"
+            style="margin-right: 0.5rem;" type="button" btn-sb type="submit">Enviar Respuesta</button>
+          <button mat-raised-button color="success" [hidden]="soloLectura" [disabled]="botonDesactivado"
+            style="margin-right: 0.5rem;" btn-sb type="submit">{{nombreBoton}}</button>
+          <button mat-raised-button mat-dialog-close color="warn">Cancelar</button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+</div>

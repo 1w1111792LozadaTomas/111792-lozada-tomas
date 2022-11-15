@@ -1,0 +1,32 @@
+<div>
+  <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+</div>
+<h2 mat-dialog-title>{{titulo}}</h2>
+<div class="card">
+  <div class="card-body">
+    <mat-dialog-content>
+      <div>
+        <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+      </div>
+      <form>
+        <div class="row align-items-center d-flex justify-content-center">
+          <div class="dropdown">
+            <mat-form-field appearance="outline">
+              <mat-label>Seleccione un Estado</mat-label>
+              <mat-select [(ngModel)]="estadoSeleccionadoAdelanto" name="estados">
+                <mat-option *ngFor="let estado of estadosAdelanto" [value]="estado.id">{{estado.nombre}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <hr>
+      <div class="row" style="float: right; margin-right: 1rem;">
+        <button mat-raised-button color="success" style=" margin-right: 0.5rem;" btn-sb type="submit"
+          accept="application/pdf," [hidden]="soloLectura" [disabled]="botonDesactivado"
+          (click)="cambiaEstadoAdelanto()">{{nombreBoton}}</button>
+        <button mat-raised-button mat-dialog-close color="warn">Cancelar</button>
+      </div>
+    </mat-dialog-content>
+  </div>
+</div>

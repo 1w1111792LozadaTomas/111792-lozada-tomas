@@ -1,0 +1,109 @@
+<div>
+  <app-spinner-carga [hidden]="!this.spinner.spinnerCarga"></app-spinner-carga>
+</div>
+<div class="container">
+  <div class="row">
+    <h1 class="display-1"><span style="color: #79B872;">Adelantos</span> Solicitados</h1>
+  </div>
+  <hr>
+  <div class="row" [hidden]="!AdelantosCargados">
+    <mat-form-field appearance="outline" style="margin-right: 0px;margin-left: auto;">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese filtro de búsqueda" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="nro_vale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nro. Adelanto </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: right; padding: 4px;"> {{adelanto.nro_vale || "S/D"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fecha_emision1">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Emisión </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: center; padding: 4px;"> {{adelanto.fecha_emision1 ||
+          "S/D"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="concepto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: left; padding: 4px;"> {{adelanto.concepto || "S/D"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="monto_pagado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto Pagado </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: right; padding: 4px;"> {{'$' + adelanto.monto_pagado || "S/D"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="cuotas">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cuotas </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: right; padding: 4px;"> {{adelanto.cuotas || "0"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="cuotas_pagas">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cuotas Pagas </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: right; padding: 4px;"> {{adelanto.cuotas_pagas || "0"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="monto_a_pagar">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto a Pagar </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: right; padding: 4px;"> {{'$' + adelanto.monto_a_pagar ||
+          "0"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="estado">z
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: center; padding: 4px;"> {{adelanto.estado || "S/D"}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fecha_baja">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Baja </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"
+          style="text-align: center; padding: 4px;"> {{adelanto.fecha_baja}} </td>
+      </ng-container>
+      <ng-container matColumnDef="ver">
+        <th mat-header-cell *matHeaderCellDef> Ver</th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}"> <button type="button"
+            class="btn btn-info" (click)="abrirModalDetalles(adelanto.id_vale,adelanto.nro_vale)" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop">
+            <i class="fa-solid fa-eye" style="color:white"></i>
+          </button> </td>
+      </ng-container>
+      <ng-container matColumnDef="editar">
+        <th mat-header-cell *matHeaderCellDef> Editar </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}">
+          <button type="button" class="btn btn-warning"
+            [hidden]="adelanto.fecha_baja || adelanto.estado != 'PARA APROBAR'"
+            (click)="abrirModalEditar(adelanto.id_vale,adelanto.nro_vale)" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop">
+            <i class="fa-solid fa-pen" style="color:white"></i>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="anular">
+        <th mat-header-cell *matHeaderCellDef> Anular </th>
+        <td mat-cell *matCellDef="let adelanto" [ngClass]="{red: adelanto.fecha_baja}">
+          <button type="button" class="btn btn-danger"
+            [hidden]="adelanto.fecha_baja || adelanto.estado != 'PARA APROBAR'"
+            (click)="modalBorrar(adelanto.id_vale,adelanto.nro_vale)" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop">
+            <i class="fa-solid fa-trash-can" style="color:white"></i>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[4, 10, 20]" showFirstLastButtons aria-label="Seleccione Recibos">
+    </mat-paginator>
+  </div>
+  <div>
+    <hr>
+    <button mat-raised-button color="success" (click)="abrirModalInsertar()" style="float: right;">
+      Agregar Solicitud de Adelanto
+    </button>
+  </div>
+</div>
